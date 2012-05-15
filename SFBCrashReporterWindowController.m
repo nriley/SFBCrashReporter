@@ -145,7 +145,7 @@
 	if(noErr == err) {
 		err = FSMoveObjectToTrashSync(&ref, NULL, kFSFileOperationDefaultOptions);
 		if(noErr != err)
-			NSLog(@"SFBCrashReporter: Unable to move %@ to trash: %i", self.crashLogPath, err);
+			NSLog(@"SFBCrashReporter: Unable to move %@ to trash: %ld", self.crashLogPath, err);
 	}
 	else
 		NSLog(@"SFBCrashReporter: Unable to create FSRef for file %@", self.crashLogPath);
