@@ -1,4 +1,9 @@
 build
-*.mode1v3
-*.pbxuser
+xcuserdata
 .DS_Store
+*.pbxuser
+*.perspectivev3
+*.mode?v3
+*~
+\#*
+.#*
