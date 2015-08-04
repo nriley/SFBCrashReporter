@@ -122,7 +122,7 @@
 #if USE_NSTEXTVIEW_PRIVATE_API
 	// Private API for placeholder strings in NSTextView
 	if([self.commentsTextView respondsToSelector:@selector(setPlaceholderString:)])
-		[self.commentsTextView setPlaceholderString:NSLocalizedString(@"Please enter a description of the actions leading up to the crash.", @"")];
+		[self.commentsTextView setPlaceholderString:NSLocalizedString(@"Please describe your actions leading up to the crash.", @"")];
 #endif
 }
 
@@ -316,7 +316,7 @@
 
 	NSAlert *alert = [[NSAlert alloc] init];
 
-	alert.messageText = NSLocalizedString(@"The crash report was successfully submitted.", @"");
+	alert.messageText = NSLocalizedString(@"Crash report successfully submitted", @"");
 	alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"Thank you for taking the time to help improve %@!", @""), [self applicationName]];
 
 	[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
@@ -335,7 +335,7 @@
 	
 	NSAlert *alert = [[NSAlert alloc] init];
 
-	alert.messageText = NSLocalizedString(@"An error occurred while submitting the crash report.", @"");
+	alert.messageText = NSLocalizedString(@"Couldn’t submit the crash report because an error occurred", @"");
 	alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"The error was: %@", @""), [error localizedDescription]];
 
 	[alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
