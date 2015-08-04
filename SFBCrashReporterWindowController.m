@@ -166,6 +166,8 @@
     
     if (![[NSFileManager defaultManager] trashItemAtURL:[NSURL fileURLWithPath:self.crashLogPath] resultingItemURL:NULL error:&error]) {
         [self presentError:error modalForWindow:self.window delegate:self didPresentSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:NULL];
+    } else {
+        [[self window] orderOut:self];
     }
 }
 
