@@ -85,6 +85,9 @@
 	[windowController showWindow:self];
 
 	windowController.self_reference = windowController;
+
+    ProcessSerialNumber currentProcess = {0, kCurrentProcess};
+    SetFrontProcessWithOptions(&currentProcess, kSetFrontProcessFrontWindowOnly);
 }
 
 // Should not be called directly by anyone except this class
@@ -109,10 +112,12 @@
 	
 	// Populate the e-mail field with the user's primary e-mail address
 	ABMultiValue *emailAddresses = [[[ABAddressBook sharedAddressBook] me] valueForProperty:kABEmailProperty];
+    for (NSUInteger i = 0 ; i < [emailAddresses count] ; i++)
+        [self.emailAddressesComboBox addItemWithObjectValue:[emailAddresses valueAtIndex:i]];
 	self.emailAddress = (NSString *)[emailAddresses valueForIdentifier:[emailAddresses primaryIdentifier]];
 
 	// Set the font for the comments
-	[self.commentsTextView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10.0] forKey:NSFontAttributeName]];
+	[self.commentsTextView setTypingAttributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:0] forKey:NSFontAttributeName]];
 
 #if USE_NSTEXTVIEW_PRIVATE_API
 	// Private API for placeholder strings in NSTextView
@@ -166,7 +171,7 @@
 	if(noErr == err) {
 		err = FSMoveObjectToTrashSync(&ref, NULL, kFSFileOperationDefaultOptions);
 		if(noErr != err)
-			NSLog(@"SFBCrashReporter: Unable to move %@ to trash: %i", self.crashLogPath, (int)err);
+			NSLog(@"SFBCrashReporter: Unable to move %@ to trash: %ld", self.crashLogPath, err);
 	}
 	else
 		NSLog(@"SFBCrashReporter: Unable to create FSRef for file %@", self.crashLogPath);

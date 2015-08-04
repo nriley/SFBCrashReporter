@@ -43,6 +43,7 @@
 // ========================================
 // IB Outlets
 @property (nonatomic, assign) IBOutlet NSTextView * commentsTextView; // weak property type not available for NSTextView
+@property (nonatomic, weak) IBOutlet NSComboBox * emailAddressesComboBox;
 @property (nonatomic, weak) IBOutlet NSButton * reportButton;
 @property (nonatomic, weak) IBOutlet NSButton * ignoreButton;
 @property (nonatomic, weak) IBOutlet NSButton * discardButton;
