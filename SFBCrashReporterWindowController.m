@@ -56,6 +56,7 @@
 - (void) sendCrashReport;
 - (void) showSubmissionSucceededSheet;
 - (void) showSubmissionFailedSheet:(NSError *)error;
+- (void) didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(void *)contextInfo;
 @end
 
 @implementation SFBCrashReporterWindowController
@@ -161,22 +162,11 @@
 
 #pragma unused(sender)
 
-	// In 10.8 use:
-//	[[NSFileManager defaultManager] trashItemAtURL:[NSURL fileURLWithPath:self.crashLogPath] resultingItemURL:NULL error:NULL];
-
-	// Note: it is odd to use UTF8String here instead of fileSystemRepresentation, but FSPathMakeRef is explicitly
-	// documented to take an UTF-8 C string
-	FSRef ref;
-	OSStatus err = FSPathMakeRef((const UInt8 *)[self.crashLogPath UTF8String], &ref, NULL);
-	if(noErr == err) {
-		err = FSMoveObjectToTrashSync(&ref, NULL, kFSFileOperationDefaultOptions);
-		if(noErr != err)
-			NSLog(@"SFBCrashReporter: Unable to move %@ to trash: %ld", self.crashLogPath, err);
-	}
-	else
-		NSLog(@"SFBCrashReporter: Unable to create FSRef for file %@", self.crashLogPath);
-
-	[[self window] orderOut:self];
+    NSError *error;
+    
+    if (![[NSFileManager defaultManager] trashItemAtURL:[NSURL fileURLWithPath:self.crashLogPath] resultingItemURL:NULL error:&error]) {
+        [self presentError:error modalForWindow:self.window delegate:self didPresentSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:NULL];
+    }
 }
 
 @end
@@ -430,6 +420,16 @@
 	_responseData = nil;
 
 	[self performSelectorOnMainThread:@selector(showSubmissionFailedSheet:) withObject:error waitUntilDone:NO];
+}
+
+#pragma mark NSErrorPresentation
+
+- (void) didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(void *)contextInfo;
+{
+
+#pragma unused(didRecover, contextInfo)
+
+    [[self window] orderOut:self];
 }
 
 @end
